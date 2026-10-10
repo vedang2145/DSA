@@ -1,171 +1,104 @@
-
 class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-class LinkedList:
+    def __init__(self,data=None):
+        self.data=data
+        self.next=None
+class SLL:
     def __init__(self):
-        self.head = None
-
-    # 1. Create Linked List
-    def create(self):
-        n = int(input("Enter number of nodes: "))
-
-        for i in range(n):
-            value = int(input("Enter node value: "))
-            self.insert_end(value)
-
-    def insert_end(self, value):
-        new_node = Node(value)
-
-        if self.head is None:
-            self.head = new_node
+        self.size=0
+        self.head=None
+    
+    def append(self,data):
+        newnode=Node(data)
+        self.size+=1
+        if not self.head:
+            self.head=newnode
             return
+        temp=self.head
+        while temp.next:
+            temp=temp.next
+        temp.next=newnode
 
-        temp = self.head
-        while temp.next is not None:
-            temp = temp.next
-
-        temp.next = new_node
-
-    # 2. Traverse and print
     def traverse(self):
-        temp = self.head
-
-        if temp is None:
-            print("List is empty")
+        if not self.head:
+            print("LL is empty")
             return
+        print("List data:")
+        temp=self.head
+        while temp:
+            print(temp.data,end=" ")
+            temp=temp.next
+    
+    def insertAtPos(self,data,pos):
+        if pos<1 or pos>self.size or self.head==None:
+            print("insertion not possible")
+            return
+        newnode=Node(data)
+        tc=self.head
+        tpre=tc
+        c=0
+        while c!=pos and tc.next!=None:
+            tpre=tc
+            tc=tc.next
+            c+=1
+        tpre.next=newnode
+        newnode.next=tc
+        self.size+=1
 
-        while temp is not None:
-            print(temp.data, end=" -> ")
+    def middleNode(self):
+        mid = self.size // 2
+        temp=self.head
+        while mid!=0:
             temp = temp.next
+            mid -= 1
+        print("\nMid Node Val:",temp.data)
 
-        print("None")
-
-    # 3. Insert at a specific position
-    def insert_position(self, value, position):
-        if position < 1:
-            print("Invalid position")
+    def deleteAtPos(self,pos):
+        if pos<1 or pos>self.size or self.head==None:
+            print("list empty")
             return
-
-        new_node = Node(value)
-
-        if position == 1:
-            new_node.next = self.head
-            self.head = new_node
+        if pos==1:
+            self.head=self.head.next
+            self.size-=1
             return
+        tc=self.head
+        tpre=tc
+        c=1
+        while c<pos:
+            tpre=tc
+            tc=tc.next
+            c+=1
+        tpre.next=tc.next
+        self.size-=1
 
-        temp = self.head
-
-        for i in range(position - 2):
-            if temp is None:
-                print("Invalid position")
-                return
-            temp = temp.next
-
-        if temp is None:
-            print("Invalid position")
-            return
-
-        new_node.next = temp.next
-        temp.next = new_node
-
-    # 4. Find middle node
-    def middle(self):
-        if self.head is None:
-            print("List is empty")
-            return
-
-        slow = self.head
-        fast = self.head
-
-        while fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
-
-        print("Middle node:", slow.data)
-
-    # 5. Delete a node by value
-    def delete(self, value):
-        temp = self.head
-
-        if temp is None:
-            print("List is empty")
-            return
-
-        if temp.data == value:
-            self.head = temp.next
-            print("Node deleted")
-            return
-
-        while temp.next and temp.next.data != value:
-            temp = temp.next
-
-        if temp.next is None:
-            print("Value not found")
-            return
-
-        temp.next = temp.next.next
-        print("Node deleted")
-
-    # 6. Reverse Linked List
-    def reverse(self):
-        previous = None
-        current = self.head
-
-        while current:
-            next_node = current.next
-            current.next = previous
-            previous = current
-            current = next_node
-
-        self.head = previous
+    def reverseList(self):
+        pre=None
+        crnt=self.head
+        while crnt:
+            nextnode=crnt.next
+            crnt.next=pre
+            pre=crnt
+            crnt=nextnode
+        self.head=pre
         print("List reversed")
 
-    # 7. Sum of every two consecutive nodes
-    def consecutive_sum(self):
+    def sum2Consecutive(self):
+        if self.head==None or self.head.next==None:
+            print("\nInsufficient no. of nodes")
+            return
+        print("\nSum of every 2 consecutive nodes:")
         temp = self.head
-
-        while temp and temp.next:
-            total = temp.data + temp.next.data
-            print(temp.data, "+", temp.next.data, "=", total)
+        while temp.next:
+            print(temp.data + temp.next.data, end=" ")
             temp = temp.next
 
+ml=SLL()
 
-# Main program
-ll = LinkedList()
+for i in range(1,7):
+    ml.append(i)
 
-while True:
-    print("\n1. Create Linked List")
-    print("2. Traverse")
-    print("3. Insert at Position")
-    print("4. Find Middle")
-    print("5. Delete Node")
-    print("6. Reverse List")
-    print("7. Sum Consecutive Nodes")
-    print("8. Exit")
-
-    choice = int(input("Enter your choice: "))
-
-    if choice == 1:
-        ll.create()
-    elif choice == 2:
-        ll.traverse()
-    elif choice == 3:
-        value = int(input("Enter value: "))
-        position = int(input("Enter position: "))
-        ll.insert_position(value, position)
-    elif choice == 4:
-        ll.middle()
-    elif choice == 5:
-        value = int(input("Enter value to delete: "))
-        ll.delete(value)
-    elif choice == 6:
-        ll.reverse()
-    elif choice == 7:
-        ll.consecutive_sum()
-    elif choice == 8:
-        break
-    else:
-        print("Invalid choice")
+ml.traverse()
+ml.middleNode()
+print("size:",ml.size)
+ml.reverseList()
+ml.traverse()
+ml.sum2Consecutive()
